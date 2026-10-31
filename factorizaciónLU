@@ -1,0 +1,61 @@
+
+import numpy as np
+
+# Matriz A y vector B
+A = np.array([
+    [2, 1, 1],
+    [4, 3, 3],
+    [2, 3, 4]
+], dtype=float)
+
+B = np.array([7, 19, 17], dtype=float)
+
+n = len(A)
+
+# Inicializar matrices L y U
+L = np.eye(n)
+U = np.zeros((n, n))
+
+# Factorizacion LU - Metodo de Doolittle
+for i in range(n):
+
+    # Calcular matriz U
+    for j in range(i, n):
+        suma = 0
+        for k in range(i):
+            suma += L[i][k] * U[k][j]
+
+        U[i][j] = A[i][j] - suma
+
+    # Calcular matriz L
+    for j in range(i + 1, n):
+        suma = 0
+        for k in range(i):
+            suma += L[j][k] * U[k][i]
+
+        L[j][i] = (A[j][i] - suma) / U[i][i]
+
+# Mostrar matrices
+print("Matriz L:")
+print(L)
+
+print("\nMatriz U:")
+print(U)
+
+# Comprobar la factorizacion
+print("\nMultiplicacion L * U:")
+print(np.dot(L, U))
+
+# Resolver LY = B
+Y = np.linalg.solve(L, B)
+
+print("\nVector Y:")
+print(Y)
+
+# Resolver UX = Y
+X = np.linalg.solve(U, Y)
+
+print("\nSolucion del sistema:")
+print("x =", X[0])
+print("y =", X[1])
+print("z =", X[2])
